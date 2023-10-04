@@ -13,7 +13,7 @@ const { MIDIOutputPorts, MIDIUnpacker } = require('./midi')
 
 const MIDIPORT = "IAC Driver Bus 1"
 const OSCPORT = 7006
-const WSPORT = 8080
+const WSPORT = 80
 
 
 async function run() {

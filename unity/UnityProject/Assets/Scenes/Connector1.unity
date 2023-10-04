@@ -410,7 +410,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c36d09f08f7e47b48e5f1f7f04472a86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _address: ws://127.0.0.1:8080
+  _address: ws://127.0.0.1
   _outgoingQueueType: 3
   _incomingQueueType: 1
 --- !u!1 &1930017582
@@ -462,7 +462,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _target: {fileID: 1930017585}
   _autoPlay: 0
-  _loop: 0
+  _loop: 1
   _offEvent: 0
   _elements:
   - _delay: 1

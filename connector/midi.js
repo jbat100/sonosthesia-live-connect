@@ -62,6 +62,12 @@ class MIDIUnpacker {
     constructor(ports, server) {
         this.ports = ports
         this.server = server
+
+        // Bind the methods to this instance
+        this.midiNoteOn = this.midiNoteOn.bind(this);
+        this.midiNoteOff = this.midiNoteOff.bind(this);
+        this.midiControl = this.midiControl.bind(this);
+
         this.setupCallbacks()
     }
 

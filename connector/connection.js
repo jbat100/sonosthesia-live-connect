@@ -74,28 +74,28 @@ class WebSocketServer {
             const wrapped = msgpack.decode(data);
 
             if (!wrapped) {
-                console.warning("Client message data could not be unpacked");
+                console.warn("Client message data could not be unpacked");
                 return;
             }
 
             if (!wrapped.address) {
-                console.warning("Client message address is not specified");
+                console.warn("Client message address is not specified");
                 return;
             }
 
             if (!this.callbacks[wrapped.address]) {
-                console.warning("Client message address is not handled");
+                console.warn("Client message address is not handled");
                 return;
             }
 
             if (!wrapped.content) {
-                console.warning("Client message content is not specified");
+                console.warn("Client message content is not specified");
                 return;
             }
 
             const content = msgpack.decode(wrapped.content)
 
-            for (const callback of this.callbacks[address]) {
+            for (const callback of this.callbacks[wrapped.address]) {
                 callback(socket, content);
             }
 
