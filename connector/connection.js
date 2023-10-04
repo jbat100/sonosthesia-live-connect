@@ -4,13 +4,23 @@ const msgpack = require('@msgpack/msgpack')
 class WebSocketServer {
 
     constructor(port) {
-        this.server = new WebSocket.Server({ port });
+        this.server = new WebSocket.Server({ port : port });
+        console.log(`WebSocketServer launched on port ${port}`)
         this.clients = [];
         this.callbacks = {}; 
         this.server.on('connection', (socket) => {
             const client = new WebSocketHandler(socket, this);
             this.clients.push(client);
             client.send('Hello client!');
+        });
+        this.server.on('error', (error) => {
+            console.error(`WebSocketServer error {error}`)
+        });
+        this.server.on('close', () => {
+            console.log(`WebSocketServer close`)
+        });
+        this.server.on('listening', () => {
+            console.log(`WebSocketServer listening on port ${port}`)
         });
     }
 

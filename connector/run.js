@@ -7,7 +7,7 @@ const process = require('node:process');
 
 const { WebSocketServer } = require('./connection');
 const { LiveOSCServer } = require('./live-osc')
-const { MIDIOutputPorts, MIDIUnpacker } = require('midi')
+const { MIDIOutputPorts, MIDIUnpacker } = require('./midi')
 
 
 

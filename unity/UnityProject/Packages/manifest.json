@@ -41,9 +41,14 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0",
-    "com.sonosthesia.flow": "1.0.2",
-    "com.sonosthesia.adaptivemidi": "1.0.2",
-    "com.sonosthesia.pack": "1.0.2"
+    "com.sonosthesia.rtmidi": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.rtmidi",
+    "com.sonosthesia.timelinemidi": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.timelinemidi",
+    "com.sonosthesia.midi": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.midi",
+    "com.sonosthesia.flow": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.flow",
+    "com.sonosthesia.adaptivemidi": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.adaptivemidi",
+    "com.sonosthesia.pack": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.pack",
+    "com.sonosthesia.utils": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.utils",
+    "com.sonosthesia.processing": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.processing"
   },
   "scopedRegistries": [
     {

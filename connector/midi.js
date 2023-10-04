@@ -26,11 +26,12 @@ class MIDIOutputPorts {
                 // Check if the output port was successfully opened
                 if (output) {
                     this.ports[name] = output;
+                    console.log(`Opened MIDI output port: ${name}`);
                 } else {
                     console.warn(`Failed to open MIDI output port: ${name}`);
                 }
             } catch (error) {
-                console.error(`failed to open MIDI outout port ${error}, reason : ${error.message}`);
+                console.error(`Failed to open MIDI outout port: ${name}, error: ${error}, reason: ${error.message}`);
                 errors.push(error);
             }
             
@@ -65,15 +66,15 @@ class MIDIUnpacker {
     }
 
     setupCallbacks() {
-        this.server.registerCallback('/midi/note/on', midiNoteOn)
-        this.server.registerCallback('/midi/note/off', midiNoteOff)
-        this.server.registerCallback('/midi/control', midiNote)
+        this.server.registerCallback('/midi/note/on', this.midiNoteOn)
+        this.server.registerCallback('/midi/note/off', this.midiNoteOff)
+        this.server.registerCallback('/midi/control', this.midiControl)
     }
 
     teardownCallbacks() {
-        this.server.unregisterCallback('/midi/note/on', midiNoteOn)
-        this.server.unregisterCallback('/midi/note/off', midiNoteOff)
-        this.server.unregisterCallback('/midi/control', midiNote)
+        this.server.unregisterCallback('/midi/note/on', this.midiNoteOn)
+        this.server.unregisterCallback('/midi/note/off', this.midiNoteOff)
+        this.server.unregisterCallback('/midi/control', this.midiControl)
     }
 
     executeMidiCommand(socket, content, commandLambda) {
