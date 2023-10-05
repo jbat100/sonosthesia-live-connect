@@ -1,38 +1,47 @@
 const WebSocket = require('ws')
 const msgpack = require('@msgpack/msgpack')
+const EventEmitter = require('eventemitter3');
 
 class WebSocketServer {
 
     constructor(port) {
         this.server = new WebSocket.Server({ port : port });
         console.log(`WebSocketServer launched on port ${port}`)
-        this.clients = [];
-        this.callbacks = {}; 
+
+        // used to store WebSocketHandler instances created on each connection
+        this._handlers = new Set();
+        this._emitter = new EventEmitter();
+        this._setupServer();
+
+    }
+
+    on(eventName, listener) {
+        this._emitter.on(eventName, listener);
+    }
+
+    _setupServer() {
         this.server.on('connection', (socket) => {
-            const client = new WebSocketHandler(socket, this);
-            this.clients.push(client);
-            client.send('Hello client!');
+            const handler = new WebSocketHandler(socket, this);
+            this._handlers.add(handler);
+            this._emitter.emit('open', handler); 
+            socket.on('close', () => {
+                this._handlers.delete(handler);
+            });
         });
         this.server.on('error', (error) => {
-            console.error(`WebSocketServer error {error}`)
+            console.error(`WebSocketServer error ${error}`)
         });
         this.server.on('close', () => {
             console.log(`WebSocketServer close`)
+            this._emitter.emit('close')
         });
         this.server.on('listening', () => {
-            console.log(`WebSocketServer listening on port ${port}`)
+            console.log(`WebSocketServer listening`)
         });
-    }
-
-    removeClient(client) {
-        const index = this.clients.indexOf(client);
-        if (index !== -1) {
-            this.clients.splice(index, 1);
-        }
     }
 
     broadcast(data) {
-        for (let client of this.clients) {
+        for (let client of this._handlers) {
             client.send(data);
         }
     }
@@ -41,35 +50,68 @@ class WebSocketServer {
         this.server.close();
     }
 
-    // Method to register a callback for an OSC-like address
-    registerCallback(address, callback) {
-        if (typeof callback !== 'function') {
-            throw new Error('Callback must be a function');
-        }
-        if (!this.callbacks[address]) {
-            this.callbacks[address] = [];
-        }
-        this.callbacks[address].push(callback);
+}
+
+class WebSocketHandler {
+
+    constructor(socket, server) {
+        this.socket = socket;
+        this.server = server;
+        this.envelopes = new AddressedEventEmitter();
+        this._emitter = new EventEmitter();
+        this.state = {
+            counter : 0
+        } // used by external observers to attach state to the handler 
+        this.isConnected = socket.readyState === WebSocket.OPEN;
+
+        this._setupEventListeners();
+        this._startCounter();
     }
 
-    unregisterCallback(address, callback) {
-        if (!this.callbacks[address]) {
-            throw new Error(`No callbacks registered for address: ${address}`);
-        }
-        const index = this.callbacks[address].indexOf(callback);
-        if (index === -1) {
-            throw new Error('Callback not found for the given address');
-        }
-        this.callbacks[address].splice(index, 1);
-        // If there are no more callbacks for this address, remove the address key
-        if (this.callbacks[address].length === 0) {
-            delete this.callbacks[address];
+    on(eventName, listener) {
+        this._emitter.on(eventName, listener);
+    }
+
+    _setupEventListeners() {
+        this.socket.on('message', (data) => {
+            this._emitter.emit('message', data);
+            this._processEnvelope(data);
+        });
+
+        this.socket.on('error', (error) => {
+            console.error('WebSocket Error:', error);
+            // this doesn't necessarily close the socket, do cleanup on close if it actually happened
+        });
+
+        this.socket.on('close', (code, reason) => {
+            this.isConnected = false;
+            console.log(`Connection closed. Code: ${code}, Reason: ${reason}`);
+            this._stopCounter();
+            this._emitter.emit('close', code, reason);
+        });
+    }
+
+    send(data) {
+        if (this.isConnected) {
+            this.socket.send(data);
+        } else {
+            console.error('Socket is not connected');
         }
     }
 
-    onClientMessage(socket, data) {
+    _startCounter() {
+        this.intervalId = setInterval(() => {
+            this.state.counter++;
+            this.send(`Counter value: ${this.state.counter}`);
+        }, 1000);  // every second
+    }
 
-        // we expect msgpack data 
+    _stopCounter() {
+        clearInterval(this.intervalId);
+    }
+
+    _processEnvelope(data) {
+
         try {
             const wrapped = msgpack.decode(data);
 
@@ -83,11 +125,6 @@ class WebSocketServer {
                 return;
             }
 
-            if (!this.callbacks[wrapped.address]) {
-                console.warn("Client message address is not handled");
-                return;
-            }
-
             if (!wrapped.content) {
                 console.warn("Client message content is not specified");
                 return;
@@ -95,9 +132,8 @@ class WebSocketServer {
 
             const content = msgpack.decode(wrapped.content)
 
-            for (const callback of this.callbacks[wrapped.address]) {
-                callback(socket, content);
-            }
+            this._emitter.emit('envelope', wrapped.address, content);
+            this.envelopes._emit(wrapped.address, content);
 
         } catch (error) {
             console.error(error);
@@ -106,58 +142,40 @@ class WebSocketServer {
     }
 }
 
-class WebSocketHandler {
+class AddressedEventEmitter {
 
-    constructor(socket, server) {
-        this.socket = socket;
-        this.server = server;
-        this.isConnected = socket.readyState === WebSocket.OPEN;
-        this.counter = 0;
-
-        this.setupEventListeners();
-        this.startCounter();
+    constructor() {
+        this._emitter = new EventEmitter();
     }
 
-    setupEventListeners() {
-        this.socket.on('message', (data) => {
-            console.log('Received:', data);
-            this.server.onClientMessage(this.socket, data);
+    _emit(address, content) {
+        this._emitter.emit(address, content);
+    }
+
+    on(eventName, listener) {
+        this._emitter.on(eventName, listener);
+    }
+
+}
+
+class WebSocketEnvelopeLogger {
+    constructor(wss, content) {
+        wss.on('open', handler => {
+            handler.on('envelope', (address, content) => {
+                if (!content) {
+                    console.log(`Received envelope to address : ${address}`);
+                } else {
+                    console.log(`Received envelope to address : ${address} : ${JSON.stringify(content)}`);
+                }
+                
+            });
         });
-
-        this.socket.on('error', (error) => {
-            console.error('WebSocket Error:', error);
-        });
-
-        this.socket.on('close', (code, reason) => {
-            this.isConnected = false;
-            console.log(`Connection closed. Code: ${code}, Reason: ${reason}`);
-            this.stopCounter();
-            this.server.removeClient(this);  // Notify the server to remove the disconnected client
-        });
-    }
-
-    send(data) {
-        if (this.isConnected) {
-            this.socket.send(data);
-        } else {
-            console.error('Socket is not connected');
-        }
-    }
-
-    startCounter() {
-        this.intervalId = setInterval(() => {
-            this.counter++;
-            this.send(`Counter value: ${this.counter}`);
-        }, 1000);  // every second
-    }
-
-    stopCounter() {
-        clearInterval(this.intervalId);
     }
 }
 
 
 module.exports = {
     WebSocketHandler,
-    WebSocketServer
+    WebSocketServer,
+    WebSocketEnvelopeLogger
 };

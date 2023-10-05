@@ -1,4 +1,4 @@
-
+const _ = require('lodash');
 const JZZ = require('jzz');
 const { AggregateException } = require('./utils')
 
@@ -12,9 +12,9 @@ class MIDIOutputPorts {
         this.ports = {}
     }
 
-    async open() {
+    open() {
         // Ensure JZZ is ready
-        await JZZ();
+        const jzz = JZZ();
 
         const errors = [];
 
@@ -60,51 +60,49 @@ class MIDIOutputPorts {
 class MIDIUnpacker {
 
     constructor(ports, server) {
-        this.ports = ports
-        this.server = server
+        this._ports = ports
+        this._server = server
 
-        // Bind the methods to this instance
-        this.midiNoteOn = this.midiNoteOn.bind(this);
-        this.midiNoteOff = this.midiNoteOff.bind(this);
-        this.midiControl = this.midiControl.bind(this);
-
-        this.setupCallbacks()
+        this._setupServer()
     }
 
-    setupCallbacks() {
-        this.server.registerCallback('/midi/note/on', this.midiNoteOn)
-        this.server.registerCallback('/midi/note/off', this.midiNoteOff)
-        this.server.registerCallback('/midi/control', this.midiControl)
-    }
+    _setupServer() {
 
-    teardownCallbacks() {
-        this.server.unregisterCallback('/midi/note/on', this.midiNoteOn)
-        this.server.unregisterCallback('/midi/note/off', this.midiNoteOff)
-        this.server.unregisterCallback('/midi/control', this.midiControl)
-    }
+        this._server.on('open', (handler) => {
 
-    executeMidiCommand(socket, content, commandLambda) {
-        const port = this.ports.selectPort(content);
-        if (port) {
-            commandLambda(port, content);
-        }
-    }
+            handler.state.midi = {
+                notes : new Set()
+            }
+            
+            // used to store note descriptions without velocity as strings in a Set
+            const noteDesription = (content) => {
+                return JSON.stringify(_.pick(content, ['port', 'channel', 'note']));
+            }
 
-    midiNoteOn(socket, content) {
-        this.executeMidiCommand(socket, content, (port, content) => {
-            port.noteOn(content.channel, content.note, content.velocity);
-        });
-    }
+            handler.on('close', () => {
+                for (let note of handler.state.midi.notes) {
+                    const content = JSON.parse(note);
+                    this._ports.selectPort(content).noteOff(content.channel, content.note, 0);
+                }
+            });
 
-    midiNoteOff(socket, content) {
-        this.executeMidiCommand(socket, content, (port, content) => {
-            port.noteOff(content.channel, content.note, content.velocity);
-        });
-    }
+            handler.envelopes.on('/midi/note/on', content => {
+                handler.state.midi.notes.add(noteDesription(content));
+                this._ports.selectPort(content).noteOn(content.channel, content.note, content.velocity);
+            });
 
-    midiControl(socket, content) {
-        this.executeMidiCommand(socket, content, (port, content) => {
-            port.control(content.channel, content.number, content.value);
+            handler.envelopes.on('/midi/note/off', content => {
+                handler.state.midi.notes.delete(noteDesription(content));
+                this._ports.selectPort(content).noteOff(content.channel, content.note, content.velocity);
+            });
+
+            handler.envelopes.on('/midi/control', content => {
+                this._ports.selectPort(content).control(content.channel, content.number, content.value);
+            });
+
+            handler.envelopes.on('/midi/aftertouch', content => {
+                this._ports.selectPort(content).aftertouch(content.channel, content.note, content.value);
+            });
         });
     }
 }
