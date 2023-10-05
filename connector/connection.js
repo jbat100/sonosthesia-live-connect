@@ -41,6 +41,9 @@ class WebSocketServer {
     }
 
     broadcast(data) {
+        if (this._handlers.size > 0) {
+            console.log(`WebSocketServer broadcasting data to ${this._handlers.size} clients`);
+        }
         for (let client of this._handlers) {
             client.send(data);
         }
@@ -102,7 +105,7 @@ class WebSocketHandler {
     _startCounter() {
         this.intervalId = setInterval(() => {
             this.state.counter++;
-            this.send(`Counter value: ${this.state.counter}`);
+            //this.send(`Counter value: ${this.state.counter}`);
         }, 1000);  // every second
     }
 

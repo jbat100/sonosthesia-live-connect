@@ -11,14 +11,18 @@ class OSCPacker {
         this.packers['/midi/control'] = (args) => {
             if (!args || args.length < 2) return null; // Check for minimum args length
             return {
-                number: args[0]?.value, // Use optional chaining for safety
-                value: args[1]?.value
+                port : "",
+                channel : 0,
+                number : args[0]?.value, // Use optional chaining for safety
+                value : args[1]?.value
             };
         };
 
         this.packers['/midi/note'] = (args) => {
             if (!args || args.length < 2) return null;
             return {
+                port : "",
+                channel : 0,
                 note: args[0]?.value,
                 velocity: args[1]?.value
             };
@@ -44,7 +48,8 @@ class OSCPacker {
 
 class LiveOSCServer {
 
-    constructor(port) {
+    constructor(port, wss) {
+        this.wss = wss;
         this.udpPort = new osc.UDPPort({
             localAddress: "0.0.0.0",
             localPort: port,
@@ -63,8 +68,9 @@ class LiveOSCServer {
             try {
                 const packedMessage = this.packer.pack(oscMsg);
                 // You can now send the packedMessage or do other operations.
-                console.log('Packed OSC message:', packedMessage);
-                console.log('Unpacked is : ', msgpack.decode(packedMessage))
+                //console.log('Packed OSC message:', packedMessage);
+                //console.log('Unpacked is : ', msgpack.decode(packedMessage))
+                this.wss.broadcast(packedMessage);
             } catch (error) {
                 console.error('Error packing OSC message:', error.message);
             }

@@ -25,8 +25,8 @@ async function run() {
     console.warning('Did not open all required MIDI output ports, contiuing regardless...')
   }
 
-  const los = new LiveOSCServer(OSCPORT);
   const wss = new WebSocketServer(WSPORT);
+  const los = new LiveOSCServer(OSCPORT, wss);
 
   context.wss = wss;
 
