@@ -30,6 +30,12 @@ async function run() {
 
   context.wss = wss;
 
+  // Which process is using port 80:
+  // sudo lsof -i -P | grep LISTEN | grep :80  # lists processes using  a port containing 80  
+  // sudo lsof -i :80 # process using port 80 
+  // sudo kill -9 PID # kill process with a given PID
+  // sudo kill -9 $(sudo lsof -t -i :80) # one liner
+
   const midiUnpacker = new MIDIUnpacker(ports, wss);
   const envelopeLogger = new WebSocketEnvelopeLogger(wss, true);
 
