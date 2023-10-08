@@ -9,22 +9,24 @@ class OSCPacker {
 
     setupPackers() {
         this.packers['/midi/control'] = (args) => {
-            if (!args || args.length < 2) return null; // Check for minimum args length
+            if (!args || args.length < 4) return null; // Check for minimum args length
             return {
                 port : "",
-                channel : 0,
-                number : args[0]?.value, // Use optional chaining for safety
-                value : args[1]?.value
+                channel : args[0]?.value,
+                number : args[1]?.value, 
+                value : args[2]?.value,
+                track : args[3]?.value,
             };
         };
 
         this.packers['/midi/note'] = (args) => {
-            if (!args || args.length < 2) return null;
+            if (!args || args.length < 4) return null;
             return {
                 port : "",
                 channel : 0,
                 note: args[0]?.value,
-                velocity: args[1]?.value
+                velocity: args[1]?.value,
+                track : args[3]?.value,
             };
         };
     }
