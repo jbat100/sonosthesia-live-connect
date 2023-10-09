@@ -393,7 +393,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _log: 1
   _receiver: {fileID: 978600451}
-  _track: Test
+  _track: Track4
   _index: 2
 --- !u!1 &982672019
 GameObject:
@@ -442,6 +442,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _receiver: {fileID: 1024710846}
   _portFilter: 
+  _trackFilter: 
 --- !u!114 &982672022
 MonoBehaviour:
   m_ObjectHideFlags: 0

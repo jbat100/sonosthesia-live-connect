@@ -8,6 +8,7 @@ class OSCPacker {
     }
 
     setupPackers() {
+
         this.packers['/midi/control'] = (args) => {
             if (!args || args.length < 4) return null; // Check for minimum args length
             return {
@@ -23,9 +24,19 @@ class OSCPacker {
             if (!args || args.length < 4) return null;
             return {
                 port : "",
-                channel : 0,
-                note: args[0]?.value,
-                velocity: args[1]?.value,
+                channel : args[0]?.value,
+                note: args[1]?.value,
+                velocity: args[2]?.value,
+                track : args[3]?.value,
+            };
+        };
+
+        this.packers['/audio/tribands'] = (args) => {
+            if (!args || args.length < 4) return null;
+            return {
+                b1: args[0]?.value,
+                b2: args[1]?.value,
+                b3: args[2]?.value,
                 track : args[3]?.value,
             };
         };
