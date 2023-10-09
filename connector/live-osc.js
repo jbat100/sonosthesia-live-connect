@@ -174,11 +174,16 @@ class OSCToWSSBuffer {
 
     push(packed) {
         if (this._overwriteKeys && this._overwriteKeys.length > 0) {
+            const previousCount = this._messages.length;
             this._messages = _.filter(this._messages, message => {
                 return _.some(this._overwriteKeys, key => {
                     return message[key] != packed[key];
                 });
             });
+            const squashedCount = previousCount - this._messages.length;
+            if (squashedCount != 0) {
+                console.log(`OSCToWSSBuffer squashed ${squashedCount} messages due to key match ${JSON.stringify(this._overwriteKeys)}`);
+            }
         }
         this._messages.push(packed)
     }
