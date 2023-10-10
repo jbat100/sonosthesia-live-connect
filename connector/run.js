@@ -10,9 +10,10 @@ const { LiveOSCServer, OSCToWSSPacker, BufferedOSCToWSSRelay } = require('./live
 const { MIDIOutputPorts, MIDIUnpacker } = require('./midi')
 
 const MIDI_PORT = "IAC Driver Bus 1";
+const MPE_PORT = "IAC Driver MPE 1";
 const OSC_PORT = 7006;
 const WSS_PORT = 80;
-const RELAY_INTERVAL = 1000;
+const RELAY_INTERVAL = 10;
 
 let context = {}
 
@@ -36,8 +37,16 @@ async function run() {
   context.wss = wss;
 
   const oscToWSSPacker = new OSCToWSSPacker();
+
   const oscToWSSRelay = new BufferedOSCToWSSRelay(wss, oscToWSSPacker, RELAY_INTERVAL);
-  const los = new LiveOSCServer(OSC_PORT, oscToWSSRelay); 
+  oscToWSSRelay.bypass('/midi/note');
+  oscToWSSRelay.bypass('/midi/note/on');
+  oscToWSSRelay.bypass('/midi/note/off');
+  oscToWSSRelay.bypass('/mpe/note');
+  oscToWSSRelay.bypass('/mpe/note/on');
+  oscToWSSRelay.bypass('/mpe/note/off');
+  
+  const los = new LiveOSCServer(OSC_PORT, oscToWSSRelay, true); 
 
   const midiUnpacker = new MIDIUnpacker(ports, wss);
   const envelopeLogger = new WebSocketEnvelopeLogger(wss, true);
