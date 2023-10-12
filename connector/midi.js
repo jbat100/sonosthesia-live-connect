@@ -96,12 +96,20 @@ class MIDIUnpacker {
                 this._ports.selectPort(content).noteOff(content.channel, content.note, content.velocity);
             });
 
-            handler.envelopes.on('/midi/control', content => {
+            handler.envelopes.on('/midi/note/aftertouch', content => {
+                this._ports.selectPort(content).aftertouch(content.channel, content.note, content.value);
+            });
+
+            handler.envelopes.on('/midi/channel/control', content => {
                 this._ports.selectPort(content).control(content.channel, content.number, content.value);
             });
 
-            handler.envelopes.on('/midi/aftertouch', content => {
-                this._ports.selectPort(content).aftertouch(content.channel, content.note, content.value);
+            handler.envelopes.on('/midi/channel/aftertouch', content => {
+                this._ports.selectPort(content).pressure(content.channel, content.value);
+            });
+
+            handler.envelopes.on('/midi/channel/bend', content => {
+                this._ports.selectPort(content).pitchBendF(content.channel, content.value / 8192.0);
             });
         });
     }

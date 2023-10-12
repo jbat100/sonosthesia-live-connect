@@ -33,6 +33,17 @@
         "com.sonosthesia.processing": "1.0.2"
       }
     },
+    "com.sonosthesia.instrument": {
+      "version": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.instrument",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.unity.mathematics": "1.2.6",
+        "com.neuecc.unirx": "7.1.0",
+        "com.sonosthesia.midi": "1.0.2",
+        "com.sonosthesia.touch": "1.0.2"
+      }
+    },
     "com.sonosthesia.midi": {
       "version": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.midi",
       "depth": 0,
@@ -78,6 +89,16 @@
       "dependencies": {
         "com.unity.timeline": "1.7.1",
         "com.sonosthesia.midi": "1.0.2"
+      }
+    },
+    "com.sonosthesia.touch": {
+      "version": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.touch",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.unity.mathematics": "1.2.6",
+        "com.neuecc.unirx": "7.1.0",
+        "com.sonosthesia.flow": "1.0.2"
       }
     },
     "com.sonosthesia.utils": {

@@ -19,7 +19,7 @@ let context = {}
 
 async function run() {
 
-  const ports = new MIDIOutputPorts(MIDI_PORT);
+  const ports = new MIDIOutputPorts(MIDI_PORT, MPE_PORT);
 
   try {
     ports.open()
@@ -42,9 +42,9 @@ async function run() {
   oscToWSSRelay.bypass('/midi/note');
   oscToWSSRelay.bypass('/midi/note/on');
   oscToWSSRelay.bypass('/midi/note/off');
-  oscToWSSRelay.bypass('/mpe/note');
-  oscToWSSRelay.bypass('/mpe/note/on');
-  oscToWSSRelay.bypass('/mpe/note/off');
+  oscToWSSRelay.bypass('/midi/channel/control');
+  oscToWSSRelay.bypass('/midi/channel/aftertouch');
+  oscToWSSRelay.bypass('/midi/channel/bend');
   
   const los = new LiveOSCServer(OSC_PORT, oscToWSSRelay, true); 
 
