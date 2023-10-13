@@ -30,13 +30,13 @@ function testMidiNote1() {
 
     // Wait for one second (1000 milliseconds)
     setTimeout(() => {
-    // Send a "Note Off" message
-    output.noteOff(0, noteNumber, velocity);
+        // Send a "Note Off" message
+        output.noteOff(0, noteNumber, velocity);
 
-    // Close the MIDI output port (optional)
-    output.close();
+        // Close the MIDI output port (optional)
+        output.close();
 
-    console.log('Note On and Note Off messages sent.');
+        console.log('Note On and Note Off messages sent.');
     }, 1000);
 
 }

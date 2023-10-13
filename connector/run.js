@@ -1,16 +1,8 @@
-const http = require('http')
-const fs = require('fs')
-const path = require('path')
-const WebSocket = require('ws')
-const msgpack = require('@msgpack/msgpack')
 const process = require('node:process');
-
 const { WebSocketServer, WebSocketEnvelopeLogger } = require('./connection');
 const { LiveOSCServer, OSCToWSSPacker, BufferedOSCToWSSRelay } = require('./live-osc')
-const { MIDIOutputPorts, MIDIUnpacker } = require('./midi')
+const { EasyMIDIOutputPorts, EasyMIDIUnpacker } = require('./easymidi-relay')
 
-const MIDI_PORT = "IAC Driver Bus 1";
-const MPE_PORT = "IAC Driver MPE 1";
 const OSC_PORT = 7006;
 const WSS_PORT = 80;
 const RELAY_INTERVAL = 10;
@@ -19,12 +11,12 @@ let context = {}
 
 async function run() {
 
-  const ports = new MIDIOutputPorts(MIDI_PORT, MPE_PORT);
+  const ports = new EasyMIDIOutputPorts("IAC Driver Bus 1", "IAC Driver U2L 1", "IAC Driver U2L 2");
 
   try {
     ports.open()
   } catch (error) {
-    console.warning('Did not open all required MIDI output ports, contiuing regardless...')
+    console.warn('Did not open all required MIDI output ports, contiuing regardless...')
   }
 
   // Which process is using port 80:
@@ -48,7 +40,7 @@ async function run() {
   
   const los = new LiveOSCServer(OSC_PORT, oscToWSSRelay, true); 
 
-  const midiUnpacker = new MIDIUnpacker(ports, wss);
+  const midiUnpacker = new EasyMIDIUnpacker(ports, wss);
   const envelopeLogger = new WebSocketEnvelopeLogger(wss, true);
 
 }

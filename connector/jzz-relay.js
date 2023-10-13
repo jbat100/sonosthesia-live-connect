@@ -1,3 +1,6 @@
+// jzz seems to upset Ableton which stops listening to midi messages 
+// (detected but not forwarded to tracks) after we send messages
+
 const _ = require('lodash');
 const JZZ = require('jzz');
 const { AggregateException } = require('./utils')
@@ -88,12 +91,13 @@ class MIDIUnpacker {
 
             handler.envelopes.on('/midi/note/on', content => {
                 handler.state.midi.notes.add(noteDesription(content));
-                this._ports.selectPort(content).noteOn(content.channel, content.note, content.velocity);
+                const port = this._ports.selectPort(content);
+                port.noteOn(content.channel, content.note, content.velocity);
             });
 
             handler.envelopes.on('/midi/note/off', content => {
                 handler.state.midi.notes.delete(noteDesription(content));
-                this._ports.selectPort(content).noteOff(content.channel, content.note, content.velocity);
+                this._ports.selectPort(content).noteOff(content.channel, content.note, 0);
             });
 
             handler.envelopes.on('/midi/note/aftertouch', content => {
