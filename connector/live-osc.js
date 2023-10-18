@@ -2,6 +2,17 @@ const _ = require('lodash');
 const osc = require('osc');
 const msgpack = require('@msgpack/msgpack');
 
+// look into using https://github.com/ideoforms/AbletonOSC  (more generally python scripting)
+// https://github.com/gluon/AbletonLive11_MIDIRemoteScripts
+// https://nsuspray.github.io/Live_API_Doc/
+
+// Python looks nasty though 
+
+// Play with the M4L examples and API described here
+// https://docs.cycling74.com/max8/vignettes/live_api_overview#Examples
+
+// clip launcher https://www.youtube.com/watch?v=yLpvJho5hQA
+
 class OSCToWSSPacker {
 
     constructor() {
