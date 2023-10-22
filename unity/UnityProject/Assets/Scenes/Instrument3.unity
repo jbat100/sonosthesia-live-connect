@@ -166,18 +166,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 414719789}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a844bbe4d0048749324358ec7a8a8a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 4cfe90cda7b847fe9142e1a01e82b0aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _autoRefresh: 1
-  _prefab: {fileID: -5017063333213957440, guid: 9d3acd175ab744396a3046ba69af6ba8,
+  _prefab: {fileID: -6693378123656590132, guid: 50cebf63f7459459e8fd4dd485d20e56,
     type: 3}
   _groupTransformers:
   - {fileID: 1749822427}
-  _start: 0
-  _end: 0.63
-  _count: 17
-  _closed: 0
+  _startNote: 40
+  _endNote: 71
+  _rootNote: 30
+  _scaleDescriptor: 4
+  _offsetSpread: 1
+  _startOffset: 0
+  _endOffset: 1
 --- !u!1 &723400511
 GameObject:
   m_ObjectHideFlags: 0
@@ -242,18 +245,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 723400511}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a844bbe4d0048749324358ec7a8a8a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 4cfe90cda7b847fe9142e1a01e82b0aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _autoRefresh: 1
-  _prefab: {fileID: -5017063333213957440, guid: 9d3acd175ab744396a3046ba69af6ba8,
+  _prefab: {fileID: -6693378123656590132, guid: 50cebf63f7459459e8fd4dd485d20e56,
     type: 3}
   _groupTransformers:
   - {fileID: 723400513}
-  _start: 0.14
-  _end: 1
-  _count: 11
-  _closed: 0
+  _startNote: 30
+  _endNote: 50
+  _rootNote: 30
+  _scaleDescriptor: 8
+  _offsetSpread: 1
+  _startOffset: 0
+  _endOffset: 1
 --- !u!1 &809405757
 GameObject:
   m_ObjectHideFlags: 0
@@ -313,18 +319,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 809405757}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a844bbe4d0048749324358ec7a8a8a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 4cfe90cda7b847fe9142e1a01e82b0aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _autoRefresh: 1
-  _prefab: {fileID: -5017063333213957440, guid: 9d3acd175ab744396a3046ba69af6ba8,
+  _prefab: {fileID: -6693378123656590132, guid: 50cebf63f7459459e8fd4dd485d20e56,
     type: 3}
   _groupTransformers:
   - {fileID: 809405759}
-  _start: 0.33
-  _end: 0.85
-  _count: 13
-  _closed: 0
+  _startNote: 40
+  _endNote: 90
+  _rootNote: 30
+  _scaleDescriptor: 5
+  _offsetSpread: 0
+  _startOffset: 0
+  _endOffset: 1
 --- !u!1 &890493320
 GameObject:
   m_ObjectHideFlags: 0

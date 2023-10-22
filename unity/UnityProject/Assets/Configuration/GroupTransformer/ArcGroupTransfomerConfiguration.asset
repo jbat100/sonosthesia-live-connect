@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _center: {x: 0, y: 0, z: 0}
   _normal: {x: 0, y: 1, z: 0}
-  _radius: 2
+  _radius: 2.18
   _start: 0
   _end: 1
   _forwardDirection: 2
