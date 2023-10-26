@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 17357332}
   - component: {fileID: 17357333}
+  - component: {fileID: 17357334}
   m_Layer: 0
   m_Name: MPEIn
   m_TagString: Untagged
@@ -167,9 +168,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b4455ce45f54786b231bb3fc82b669f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _log: 1
+  _channel: {fileID: 17357334}
   _receiver: {fileID: 1024710846}
   _track: MPERaw2
+--- !u!114 &17357334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 17357331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b354c72da6784a3cb79fb06b14924457, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _log: 1
 --- !u!1 &248246869
 GameObject:
   m_ObjectHideFlags: 0
@@ -434,7 +448,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 978600450}
-  - component: {fileID: 978600451}
   - component: {fileID: 978600452}
   m_Layer: 0
   m_Name: AudioIn
@@ -458,19 +471,6 @@ Transform:
   m_Father: {fileID: 1024710844}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &978600451
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 978600449}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a8ea77ceddcd4c528acad7929109cca4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _connection: {fileID: 1024710845}
 --- !u!114 &978600452
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -484,7 +484,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _log: 1
-  _receiver: {fileID: 978600451}
+  _receiver: {fileID: 1024710847}
   _track: Track4
   _index: 2
 --- !u!1 &982672019
@@ -498,6 +498,7 @@ GameObject:
   - component: {fileID: 982672020}
   - component: {fileID: 982672021}
   - component: {fileID: 982672022}
+  - component: {fileID: 982672023}
   m_Layer: 0
   m_Name: MIDIIn
   m_TagString: Untagged
@@ -547,13 +548,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdf1c16d80944a1fac2e14b38e7e4488, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _log: 1
+  _channel: {fileID: 982672023}
   _input: {fileID: 982672021}
-  _endOnZeroVelocity: 0
+  _endOnZeroVelocity: 1
   _filter: 0
-  _channel: 0
+  _channelFilter: -1
   _lowerPitch: 0
   _upperPitch: 127
+--- !u!114 &982672023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 982672019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1331aca328c43bbb33514d272c217ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _log: 0
 --- !u!1 &1024710843
 GameObject:
   m_ObjectHideFlags: 0
@@ -629,9 +643,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1024710843}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f15e8604581749568109588aa47bcfe2, type: 3}
+  m_Script: {fileID: 11500000, guid: a8ea77ceddcd4c528acad7929109cca4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _connection: {fileID: 1024710845}
 --- !u!1 &1930017582
 GameObject:
   m_ObjectHideFlags: 0
@@ -720,6 +735,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 1930017585}
   _output: {fileID: 1930017587}
+  _aftertouch: 0
 --- !u!114 &1930017587
 MonoBehaviour:
   m_ObjectHideFlags: 0
