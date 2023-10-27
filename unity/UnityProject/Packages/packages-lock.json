@@ -110,6 +110,16 @@
         "com.sonosthesia.processing": "1.0.2"
       }
     },
+    "com.sonosthesia.target": {
+      "version": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.target",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.neuecc.unirx": "7.1.0",
+        "com.sonosthesia.utils": "1.0.2",
+        "com.sonosthesia.signal": "1.0.2"
+      }
+    },
     "com.sonosthesia.timelinemidi": {
       "version": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.timelinemidi",
       "depth": 0,

@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 31637002}
   - component: {fileID: 31637003}
   - component: {fileID: 31637004}
+  - component: {fileID: 31637005}
   m_Layer: 0
   m_Name: Play2a
   m_TagString: Untagged
@@ -209,6 +210,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxConcurrent: 1
+--- !u!114 &31637005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 31637000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b72065a7fed457fbd5bab5eacf3a3ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _log: 0
+  _triggerActor: {fileID: 31637004}
 --- !u!1 &127377915
 GameObject:
   m_ObjectHideFlags: 0
@@ -371,6 +386,8 @@ GameObject:
   - component: {fileID: 447954667}
   - component: {fileID: 447954666}
   - component: {fileID: 447954665}
+  - component: {fileID: 447954669}
+  - component: {fileID: 447954670}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -461,7 +478,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 7f540485d65e945aea5a9f62b7b21b14, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -491,6 +508,41 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 447954663}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &447954669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 447954663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8197b5f6d59457db25340457ebebd43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _log: 0
+  _signal: {fileID: 31637005}
+  _safeIndex: 1
+  _values:
+  - {r: 0.5411765, g: 0.5411765, b: 0.5411765, a: 1}
+  - {r: 0.8113208, g: 0.5549128, b: 0.5549128, a: 1}
+  - {r: 0.9245283, g: 0.39684942, b: 0.39684942, a: 1}
+  - {r: 1, g: 0, b: 0, a: 1}
+--- !u!114 &447954670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 447954663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad954164d26d48eaaedafb45eb403200, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _source: {fileID: 447954669}
+  _renderer: {fileID: 0}
+  _name: _BaseColor
 --- !u!1 &587676810
 GameObject:
   m_ObjectHideFlags: 0

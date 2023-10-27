@@ -52,6 +52,7 @@
     "com.sonosthesia.utils": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.utils",
     "com.sonosthesia.processing": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.processing",
     "com.sonosthesia.instrument": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.instrument",
+    "com.sonosthesia.target": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.target",
     "com.sonosthesia.touch": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.touch"
   },
   "scopedRegistries": [
