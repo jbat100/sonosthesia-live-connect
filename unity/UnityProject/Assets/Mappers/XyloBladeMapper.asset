@@ -9,6 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 494910b6c5d9480085cb95fb9ea58dfa, type: 3}
-  m_Name: MIDINoteChannel1
+  m_Script: {fileID: 11500000, guid: 89875db0464e45a5b61f721259ffc4ad, type: 3}
+  m_Name: XyloBladeMapper
   m_EditorClassIdentifier: 
+  _autoMap: 0
+  _connections: []
+  _compatibility: []
