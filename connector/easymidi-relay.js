@@ -51,7 +51,6 @@ class EasyMIDIOutputPorts {
         }
         return this.selectAnyPort();
     }
-
 }
 
 
@@ -60,7 +59,6 @@ class EasyMIDIUnpacker {
     constructor(ports, server) {
         this._ports = ports
         this._server = server
-
         this._setupServer()
     }
 

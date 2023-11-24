@@ -10,13 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 89875db0464e45a5b61f721259ffc4ad, type: 3}
-  m_Name: XyloBladeMapper
+  m_Name: BassNoiseMapper
   m_EditorClassIdentifier: 
   _autoMap: 0
   _connections:
-  - _source: Rotation
-    _target: Expression1
-    _processorFactory: {fileID: 0}
-  _compatibility:
-  - Blade
-  - Test
+  - _source: B1
+    _target: Component-0
+    _processorFactory: {fileID: 11400000, guid: bb2d3813fb8204499b4ec4ff46ecded6,
+      type: 2}
+  _compatibility: []
