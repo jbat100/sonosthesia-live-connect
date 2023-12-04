@@ -1,5 +1,5 @@
-const WebSocket = require('ws')
-const msgpack = require('@msgpack/msgpack')
+const WebSocket = require('ws');
+const msgpack = require('@msgpack/msgpack');
 const EventEmitter = require('eventemitter3');
 const { assertType } = require('../config/config');
 

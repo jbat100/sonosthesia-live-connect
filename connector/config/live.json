@@ -17,7 +17,6 @@
     },
     "liveSource" : {
         "port" : 7006,
-        "logLovel" : 2,
-        "buffer" : 10
+        "logLovel" : 2
     }
 }

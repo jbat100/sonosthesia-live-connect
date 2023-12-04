@@ -1,7 +1,8 @@
 const _ = require('lodash');
 const osc = require('osc');
 const msgpack = require('@msgpack/msgpack');
-const { assertType, assertArrayType } = require('../config/config');
+const EventEmitter = require('eventemitter3');
+const { assertType } = require('../config/config');
 
 // look into using https://github.com/ideoforms/AbletonOSC  (more generally python scripting)
 // https://github.com/gluon/AbletonLive11_MIDIRemoteScripts
@@ -112,9 +113,9 @@ class SimpleOSCToWSSSource {
         this._wss = wss;
         this._packer = packer;
         this._live.on('message', message => {
-            const packedContent = this._packer.pack(oscMsg.address, oscMsg.args);
+            const packedContent = this._packer.pack(message.address, message.args);
             const envelope = msgpack.encode({
-                address: oscMsg.address,
+                address: message.address,
                 content: msgpack.encode(packedContent)
             });
             this._wss.broadcast(envelope);
@@ -138,15 +139,15 @@ class BufferedOSCToWSSSource {
         };
         this._intervalId = setInterval(() => { this._flush(); },  interval);
         this._live.on('message', message => {
-            const packedContent = this._packer.pack(oscMsg.address, oscMsg.args);
-            if (this._bypassAddresses.has(oscMsg.address)) {
+            const packedContent = this._packer.pack(message.address, message.args);
+            if (this._bypassAddresses.has(message.address)) {
                 const envelope = msgpack.encode({
-                    address: oscMsg.address,
+                    address: message.address,
                     content: msgpack.encode(packedContent)
                 });
                 this._wss.broadcast(envelope);
             } else {
-                this._queueForAddress(oscMsg.address).push(packedContent);
+                this._queueForAddress(message.address).push(packedContent);
             }  
         });
     }
