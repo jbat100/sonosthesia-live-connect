@@ -1,0 +1,10 @@
+{
+    "wsServerPort" : 80,
+    "midiInputPorts" : [
+        "IAC Driver Bus 1"
+    ],
+    "midiOutputPorts" : [
+        "IAC Driver Bus 1"
+    ],
+    "envelopeLogLevel" : 2
+}

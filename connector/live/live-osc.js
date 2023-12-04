@@ -106,7 +106,7 @@ class OSCToWSSPacker {
 
 }
 
-class SimpleOSCToWSSRelay {
+class SimpleOSCToWSSSource {
 
     constructor(wss, packer) {
         this._wss = wss;
@@ -124,7 +124,7 @@ class SimpleOSCToWSSRelay {
 
 }
 
-class BufferedOSCToWSSRelay {
+class BufferedOSCToWSSSource {
 
     constructor(wss, packer, interval) {
         this._bypassAddresses = new Set();
@@ -275,6 +275,6 @@ class LiveOSCServer {
 module.exports = {
     LiveOSCServer,
     OSCToWSSPacker,
-    SimpleOSCToWSSRelay,
-    BufferedOSCToWSSRelay
+    SimpleOSCToWSSSource,
+    BufferedOSCToWSSSource
 }
