@@ -1,12 +1,23 @@
 {
-    "wsServerPort" : 80,
-    "midiInputPorts" : [
-        "IAC Driver Bus 1"
-    ],
-    "midiOutputPorts" : [
-        "IAC Driver Bus 1"
-    ],
-    "envelopeLogLevel" : 0,
-    "oscServerPort" : 7006,
-    "relayBufferInterval" : 10
+    "server" : {
+        "port" : 80,
+        "logLevel" : 2
+    },
+    "midiSink" : {
+        "ports" : [
+            "IAC Driver Bus 1"
+        ],
+        "logLevel" : 2
+    },
+    "midiSource" : {
+        "ports" : [
+            "IAC Driver Bus 1"
+        ],
+        "logLevel" : 2
+    },
+    "liveSource" : {
+        "port" : 7006,
+        "logLovel" : 2,
+        "buffer" : 10
+    }
 }

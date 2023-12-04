@@ -63,20 +63,10 @@ function assertArrayType(key, config, type, required) {
     }
 }
 
-function checkConfig(config) {
-    assertType('wsServerPort', config, 'number', true);
-    assertArrayType('midiInputPorts', config, 'string');
-    assertArrayType('midiOutputPorts', config, 'string');
-    assertType('envelopeLogLevel', config, 'number');
-    assertType('oscServerPort', config, 'number');
-    assertType('relayBufferInterval', config, 'number');
-}
-
 module.exports = {
     getConfig,
     getConfigWithName,
     getConfigWithPath,
     assertType,
-    assertArrayType,
-    checkConfig
+    assertArrayType
 }

@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const osc = require('osc');
 const msgpack = require('@msgpack/msgpack');
+const { assertType, assertArrayType } = require('../config/config');
 
 // look into using https://github.com/ideoforms/AbletonOSC  (more generally python scripting)
 // https://github.com/gluon/AbletonLive11_MIDIRemoteScripts
@@ -13,7 +14,7 @@ const msgpack = require('@msgpack/msgpack');
 
 // clip launcher https://www.youtube.com/watch?v=yLpvJho5hQA
 
-class OSCToWSSPacker {
+class OSCPacker {
 
     constructor() {
         this._packers = {};
@@ -24,12 +25,10 @@ class OSCToWSSPacker {
         if (!address || !this._packers[address]) {
             throw new Error(`Unsupported OSC message address: ${address}`);
         }
-
         const packed = this._packers[address](args);
         if (!packed) {
             throw new Error(`Failed to pack OSC message with address: ${address}`);
         }
-
         return packed;
     }
 
@@ -108,26 +107,26 @@ class OSCToWSSPacker {
 
 class SimpleOSCToWSSSource {
 
-    constructor(wss, packer) {
+    constructor(live, wss, packer) {
+        this._live = live;
         this._wss = wss;
         this._packer = packer;
-    }
-
-    push(oscMsg, timeTag, info) {
-        const packedContent = this._packer.pack(oscMsg.address, oscMsg.args);
-        const envelope = msgpack.encode({
-            address: oscMsg.address,
-            content: msgpack.encode(packedContent)
+        this._live.on('message', message => {
+            const packedContent = this._packer.pack(oscMsg.address, oscMsg.args);
+            const envelope = msgpack.encode({
+                address: oscMsg.address,
+                content: msgpack.encode(packedContent)
+            });
+            this._wss.broadcast(envelope);
         });
-        this._wss.broadcast(envelope);
     }
-
 }
 
 class BufferedOSCToWSSSource {
 
-    constructor(wss, packer, interval) {
+    constructor(live, wss, packer, interval) {
         this._bypassAddresses = new Set();
+        this._live = live;
         this._wss = wss;
         this._packer = packer;
         this._queues = {
@@ -137,24 +136,23 @@ class BufferedOSCToWSSSource {
             '/mpe/aftertouch' : new OSCToWSSBuffer(['track', 'channel']),
             '/mpe/bend' : new OSCToWSSBuffer(['track', 'channel'])
         };
-        this._intervalId = setInterval(() => { this._flush(); },  interval)
+        this._intervalId = setInterval(() => { this._flush(); },  interval);
+        this._live.on('message', message => {
+            const packedContent = this._packer.pack(oscMsg.address, oscMsg.args);
+            if (this._bypassAddresses.has(oscMsg.address)) {
+                const envelope = msgpack.encode({
+                    address: oscMsg.address,
+                    content: msgpack.encode(packedContent)
+                });
+                this._wss.broadcast(envelope);
+            } else {
+                this._queueForAddress(oscMsg.address).push(packedContent);
+            }  
+        });
     }
 
     bypass(address) {
         this._bypassAddresses.add(address);
-    }
-
-    push(oscMsg, timeTag, info) {
-        const packedContent = this._packer.pack(oscMsg.address, oscMsg.args);
-        if (this._bypassAddresses.has(oscMsg.address)) {
-            const envelope = msgpack.encode({
-                address: oscMsg.address,
-                content: msgpack.encode(packedContent)
-            });
-            this._wss.broadcast(envelope);
-        } else {
-            this._queueForAddress(oscMsg.address).push(packedContent);
-        }   
     }
 
     _queueForAddress(address) {
@@ -180,13 +178,13 @@ class BufferedOSCToWSSSource {
             return;
         }
         if (envelopes.length == 1) {
-            console.log('BufferedOSCToWSSRelay sending single envelope')
+            console.log('BufferedOSCToWSSSource sending single envelope')
             const envelope = msgpack.encode(envelopes[0]);
             this._wss.broadcast(envelope);
             return;
         }
         if (envelopes.length > 1) {
-            console.log(`BufferedOSCToWSSRelay sending ${envelopes.length} envelope bundle`)
+            console.log(`BufferedOSCToWSSSource sending ${envelopes.length} envelope bundle`)
             const envelope = msgpack.encode({
                 address : '/bundle',
                 content : msgpack.encode({
@@ -233,48 +231,85 @@ class OSCToWSSBuffer {
 
 }
 
+class LiveServerLogger {
+
+    constructor (server, level) {
+        this._server = server;
+        if (level === 1) {
+            this._server.on('message', message => {
+                console.log(`Incoming live osc with address : ${message.address}`);
+            });
+        }
+        if (level === 2) {
+            this._server.on('message', message => {
+                console.log(`Incoming live osc : ${message}`);
+            });
+        }
+    }
+
+} 
 
 
 class LiveOSCServer {
 
-    constructor(port, relay, logMessages) {
-        this._logMessages = logMessages;
-        this._relay = relay;
+    constructor(port) {
         this._udpPort = new osc.UDPPort({
             localAddress: "0.0.0.0",
             localPort: port,
             metadata: true
         });
-        this._setupEventListeners();
+        this._emitter = new EventEmitter();
+        this._udpPort.on("message", (oscMsg, timeTag, info) => {
+            this._emitter.emit('message', oscMsg);
+        });
+        this._udpPort.on('error', function(error) {
+            console.log("Error: ", error);
+        });
         this._udpPort.open();
+    }
+
+    on(eventName, listener) {
+        this._emitter.on(eventName, listener);
     }
 
     close() {
         this._relay.close();
     }
+}
 
-    _setupEventListeners() {
-        // Listen for incoming OSC messages.
-        this._udpPort.on("message", (oscMsg, timeTag, info) => {
-            if (this._logMessages) {
-                console.log("OSC message : ", oscMsg);
-            }
-            //console.log("Remote info is: ", info);
-            try {
-                this._relay.push(oscMsg, timeTag, info);
-            } catch (error) {
-                console.error('Error pushing OSC message:', error.message);
-            }
-        });
-        this._udpPort.on('error', function(error) {
-            console.log("Error: ", error);
-        })
+function liveServerFromConfig(config, wss) {
+
+    assertType('port', config, 'number', true);
+    assertType('logLevel', config, 'number');
+    assertType('buffer', config, 'number');
+
+    const liveServer = new LiveOSCServer(config.port); 
+
+    if (config.buffer) {
+        const source = new BufferedOSCToWSSSource(liveServer, wss, new OSCPacker(), config.buffer);
+        // no matter what we don't want midi messages to be squashed
+        source.bypass('/midi/note');
+        source.bypass('/midi/note/on');
+        source.bypass('/midi/note/off');
+        source.bypass('/midi/channel/control');
+        source.bypass('/midi/channel/aftertouch');
+        source.bypass('/midi/channel/bend');
+    } else {
+        const source = new SimpleOSCToWSSSource(liveServer, wss, new OSCPacker());
     }
+    
+    if (config.logLevel) {
+        const logger = new LiveServerLogger(liveServer, config.logLevel);
+    }
+
+    return liveServer;
 }
 
 module.exports = {
+    liveServerFromConfig,
     LiveOSCServer,
-    OSCToWSSPacker,
+    OSCPacker,
+    LiveServerLogger,
     SimpleOSCToWSSSource,
     BufferedOSCToWSSSource
 }

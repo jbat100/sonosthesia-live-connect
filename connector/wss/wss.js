@@ -1,6 +1,7 @@
 const WebSocket = require('ws')
 const msgpack = require('@msgpack/msgpack')
 const EventEmitter = require('eventemitter3');
+const { assertType } = require('../config/config');
 
 class WebSocketServer {
 
@@ -176,8 +177,24 @@ class WebSocketEnvelopeLogger {
     }
 }
 
+function serverFromConfig(config) {
+
+    assertType('port', config, 'number', true);
+    assertType('logLevel', config, 'number');
+
+    const server = new WebSocketServer(config.port);
+
+    if (config.logLevel === 1) {
+        const logger = new WebSocketEnvelopeLogger(server, false);
+    } else if (config.logLevel === 2) {
+        const logger = new WebSocketEnvelopeLogger(server, true);
+    }
+    
+    return server;
+}
 
 module.exports = {
+    serverFromConfig,
     WebSocketHandler,
     WebSocketServer,
     WebSocketEnvelopeLogger

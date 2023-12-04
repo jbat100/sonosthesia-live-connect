@@ -1,10 +1,18 @@
 {
-    "wsServerPort" : 80,
-    "midiInputPorts" : [
-        "IAC Driver Bus 1"
-    ],
-    "midiOutputPorts" : [
-        "IAC Driver Bus 1"
-    ],
-    "envelopeLogLevel" : 2
+    "server" : {
+        "port" : 80,
+        "logLevel" : 2
+    },
+    "midiSink" : {
+        "ports" : [
+            "IAC Driver Bus 1"
+        ],
+        "logLevel" : 2
+    },
+    "midiSource" : {
+        "ports" : [
+            "IAC Driver Bus 1"
+        ],
+        "logLevel" : 2
+    }
 }

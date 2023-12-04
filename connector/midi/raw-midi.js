@@ -2,6 +2,7 @@ const msgpack = require('@msgpack/msgpack');
 const easymidi = require('easymidi');
 const prettyjson = require('prettyjson');
 const { MIDIOutputs } = require('./midi-outputs');
+const { assertType, assertArrayType } = require('../config/config');
 
 /** 
  * Listens to MIDI messages on a given input, packs bytes and broadcasts them to server clients
@@ -14,9 +15,9 @@ class RawMIDISource {
      * @param {server} midiInput - a WebSocketServer to broadcast packed data, TODO : abstract interface to allow other transports
      * @param {log} log - if true, logs forwarded traffic
      */
-    constructor(midiInput, server, log) {
+    constructor(midiInput, server, logLevel) {
 
-        this._log = log;
+        this._logLevel = logLevel;
         this._server = server;
         this._cumulativeTime = 0;
         this._midiInput = midiInput;
@@ -30,7 +31,7 @@ class RawMIDISource {
 
         this._cumulativeTime += deltaTime;
 
-        if (this._log) {
+        if (this._logLevel) {
             const messageHex = message.map(byte => byte.toString(16)).join(' ');
             console.log(`RawMIDISource l: ${message.length} m: ${messageHex} d: ${deltaTime}`);
         }
@@ -77,10 +78,10 @@ class RawMIDISink {
      * @param {server} - a WebSocketServer to listen to packed data, TODO : abstract interface to allow other transports
      * @param {log} - if true, logs forwarded traffic
      */
-    constructor(midiOutputs, server, log) {
+    constructor(midiOutputs, server, logLevel) {
         this._midiOutputs = midiOutputs;
         this._server = server;
-        this._log = log;
+        this._logLevel = logLevel;
         this._server.on('open', (handler) => {
 
             const isNoteOn = (byte) => {
@@ -136,10 +137,38 @@ class RawMIDISink {
             });
         });
     }
+}
 
+function midiSinkFromConfig(config, wss) {
+
+    assertArrayType('ports', config, 'string', true);
+    assertType('logLevel', config, 'number');
+
+    const outputs = new MIDIOutputs(config.ports);
+    const midiSink = new RawMIDISink(outputs, wss);
+
+    return midiSink;
+}
+
+function midiSourcesFromConfig(config, wss) {
+
+    assertArrayType('ports', config, 'string', true);
+    assertType('logLevel', config, 'number');
+
+    const sources = [];
+
+    for (let midiInputName of config.ports) {
+        const midiInput = new easymidi.Input(midiInputName); 
+        const source = new RawMIDISource(midiInput, wss, config.logLevel);
+        sources.push(source);
+    }
+
+    return sources;
 }
 
 module.exports = {
+    midiSinkFromConfig,
+    midiSourcesFromConfig,
     RawMIDISource,
     RawMIDISink
 }
