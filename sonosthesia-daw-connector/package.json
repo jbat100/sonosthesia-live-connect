@@ -1,0 +1,31 @@
+{
+  "name": "sonosthesia-daw-connector",
+  "version": "0.1.0",
+  "bin": "./connector.js",
+  "description": "Node connector for digital audio workstations",
+  "main": "connector.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jbat100/sonosthesia-live-connect"
+  },
+  "keywords": [
+    "midi",
+    "osc"
+  ],
+  "author": {
+    "name": "Jonathan Thorpe",
+    "email": "johnny.frenchy@gmail.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@msgpack/msgpack": "^3.0.0-beta2",
+    "args-parser": "^1.3.0",
+    "easymidi": "^3.1.0",
+    "eventemitter3": "^5.0.1",
+    "lodash": "^4.17.21",
+    "mpe": "^1.0.4",
+    "osc": "^2.4.4",
+    "prettyjson": "^1.2.5",
+    "ws": "^8.14.2"
+  }
+}

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const nodeprocess = require('node:process');
 const parser = require('args-parser');
 
@@ -17,7 +19,7 @@ let context = {}
 function run() {
 
   const args = parser(process.argv);
-  const config = getConfig(args.config);
+  const config = getConfig(args.config ?? 'midi');
 
   assertType('server', config, 'object', true);
   assertType('liveSource', config, 'object');

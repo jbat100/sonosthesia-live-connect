@@ -2,12 +2,22 @@ const fs = require('fs');
 const path = require('path');
 const prettyjson = require('prettyjson');
 
+function ensureExtension(filePath, extension) {
+    // Check if the file path already has the desired extension
+    if (path.extname(filePath) === extension) {
+        return filePath;
+    } else {
+        // If not, append the extension
+        return filePath + extension;
+    }
+}
+
 function getConfig(configNameOrPath) {
     // https://stackoverflow.com/questions/38971649/nodejs-check-if-the-given-string-is-a-valid-file-system-path-without-actually-ch
     if (configNameOrPath === path.basename(configNameOrPath)) {
         return getConfigWithName(configNameOrPath);
     } else {
-        return getConfigWithPath(configNameOrPath);
+        return getConfigWithPath(ensureExtension(configNameOrPath, '.json'));
     }
 }
 
@@ -16,8 +26,15 @@ function getConfigWithName(configName) {
         console.log("Unspecified config, defaulting to midi");
         configName = "midi";
     }
-    const configPath = path.join(__dirname, configName + ".json");
-    return getConfigWithPath(configPath);
+    const cwdPath = path.join(process.cwd(), ensureExtension(configName, '.json'));
+    if (fs.existsSync(cwdPath)) {
+        return getConfigWithPath(cwdPath);
+    }
+    const configPath = path.join(__dirname, ensureExtension(configName, '.json'));
+    if (fs.existsSync(configPath)) {
+        return getConfigWithPath(configPath);
+    }
+    throw new Error(`Could not find config : ${configName}`)
 }
 
 function getConfigWithPath(configPath) {
