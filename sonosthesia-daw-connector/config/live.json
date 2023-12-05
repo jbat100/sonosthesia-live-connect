@@ -1,0 +1,22 @@
+{
+    "server" : {
+        "port" : 80,
+        "logLevel" : 2
+    },
+    "midiSink" : {
+        "ports" : [
+            "IAC Driver Bus 1"
+        ],
+        "logLevel" : 2
+    },
+    "midiSource" : {
+        "ports" : [
+            "IAC Driver Bus 1"
+        ],
+        "logLevel" : 2
+    },
+    "liveSource" : {
+        "port" : 7006,
+        "logLovel" : 2
+    }
+}

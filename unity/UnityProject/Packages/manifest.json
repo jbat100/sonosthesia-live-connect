@@ -45,15 +45,19 @@
     "com.sonosthesia.timelinemidi": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.timelinemidi",
     "com.sonosthesia.midi": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.midi",
     "com.sonosthesia.signal": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.signal",
+    "com.sonosthesia.generator": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.generator",
     "com.sonosthesia.channel": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.channel",
     "com.sonosthesia.mapping": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.mapping",
     "com.sonosthesia.adaptivemidi": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.adaptivemidi",
+    "com.sonosthesia.metronome": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.metronome",
     "com.sonosthesia.pack": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.pack",
     "com.sonosthesia.utils": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.utils",
     "com.sonosthesia.processing": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.processing",
     "com.sonosthesia.instrument": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.instrument",
+    "com.sonosthesia.sequencer": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.sequencer",
     "com.sonosthesia.target": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.target",
-    "com.sonosthesia.touch": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.touch"
+    "com.sonosthesia.touch": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.touch",
+    "com.sonosthesia.flow": "file:../../../../sonosthesia-unity-packages/packages/com.sonosthesia.flow"
   },
   "scopedRegistries": [
     {
